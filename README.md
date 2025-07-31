@@ -1,3 +1,9 @@
+<h2 align="center">
+  <strong>
+    <a href="README.md">English</a> | <a href="README_ch.md">中文</a>
+  </strong>
+</h2>
+
 # [ITRI Internship] Person Re-ID Tracker
 <!-- 
 This project is largely based on [ros2_tao_pointpillars](https://github.com/NVIDIA-AI-IOT/ros2_tao_pointpillars). The code is modified for Mask2Former TensorRT .engine file inference. -->
