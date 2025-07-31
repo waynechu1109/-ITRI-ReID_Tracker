@@ -8,6 +8,7 @@
 <!-- 
 This project is largely based on [ros2_tao_pointpillars](https://github.com/NVIDIA-AI-IOT/ros2_tao_pointpillars). The code is modified for Mask2Former TensorRT .engine file inference. -->
 
+This project integrates both the YOLO11n model and the OSNet model to accomplish the Person Re-ID Tracker task.
 
 ## Quick Start
 ### Docker
@@ -21,7 +22,7 @@ sudo docker run -it --net=host --gpus=all --rm=false  --name tao-toolkit-5.5.0-d
   nvcr.io/nvidia/tao/tao-toolkit:5.5.0-deploy
 ```
 
-### Accelerate OSNet
+### Accelerate OSNet with Command Lines
 OSNet is used for 512D features extraction in this project. OSNet model can be downloaded [here](https://kaiyangzhou.github.io/deep-person-reid/MODEL_ZOO).
 
 We have to first convert the `.pt` OSNet model file to `.onnx` file for further speed up. 
@@ -72,18 +73,16 @@ trtexec \
 - `avgRuns=100`: Take the average over 100 runs to improve the accuracy of the results.
 
 ### Run ReID
-In the prototype stage, you can play ROS2 bag 
+At the prototype stage, you can play ROS2 bag for video input. Please make sure that the video should be published in `/camera/image_raw` topic. 
 
 ```bash
-# 需同步播放 ros2bag 來提供輸入畫面
-cd ros2_ws/rosbag2/
+cd <ros2bag_path>
 
-# 播放
-ros2 bag play street_resized_resized/ -l
+# play
+ros2 bag play <ros2bag_name> -l
 
 ```
-先使用 `ros2 topic list` 確認是否能看到 `/camera/image_raw` 這個 topic。
-
+After that, build the package and run Re-ID code.
 ```bash
 cd ros2_ws
 
@@ -91,21 +90,18 @@ cd ros2_ws
 colcon build --packages-select reid_tracker
 source install/setup.bash
 
-# 執行主程式
+# run
 ros2 launch reid_tracker person_reid_batch.launch.py
 ```
-開始追蹤畫面中特定人物，只需要使用滑鼠點擊，隨後該人物偵測匡就會變成紅色，程式便可以實現追蹤。如要切換追蹤人物，直接點擊其他人即可。
 
-輸出的偵測畫面會被發布在 `/person_reid/image` 這個 topic，偵測人物框則會被發布在 `/person_reid/bboxes`。
-
-
+Simply click on any person in the video frame to start tracking them. The detection box for the selected individual will turn red, indicating that tracking is active. To switch the tracking target, just click on another person; the program will immediately begin tracking the newly selected individual.
 
 ## Results
 <table style="width: 100%; table-layout: fixed;">
   <tr>
     <td style="width: 100%; vertical-align: top;">
       <div style="width: 100%; text-align: center;">
-        <img src="readme_media/reid_tracker_shorten.gif" style="width: 100%;" />
+        <img src="readme_media/reid_tracker_.gif" style="width: 100%;" />
         <!-- <div style="margin-top: 8px;">Mapillary</div> -->
       </div>
     </td>

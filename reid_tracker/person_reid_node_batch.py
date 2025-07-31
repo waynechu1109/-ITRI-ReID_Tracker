@@ -196,7 +196,7 @@ class PersonReIDNode(Node):
             # batch inference
             crops = np.array(crops)
             # crops = np.transpose(crops, (0, 3, 1, 2))
-            # print("⚙️ Crops shape / dtype before inference:", crops.shape, crops.dtype)
+            # print("Crops shape / dtype before inference:", crops.shape, crops.dtype)
             # if crops.dtype != np.float32:
             #     # crops = crops.astype(np.uint8)
             #     crops = np.array(crops, dtype=np.float32)
@@ -208,7 +208,7 @@ class PersonReIDNode(Node):
             # print(f"mean: {features.mean():.4f}, std: {features.std():.4f}, min: {features.min():.4f}, max: {features.max():.4f}")
             # features = (features-1)*(-3)
             if not np.all(np.isfinite(features)):
-                self.get_logger().warn("⚠️ Feature output contains NaN or Inf! Skipping this frame.")
+                self.get_logger().warn("Feature output contains NaN or Inf! Skipping this frame.")
                 return
             
             # print(features[0])
@@ -231,7 +231,7 @@ class PersonReIDNode(Node):
                 # gallery_feats = [d['feat'] for d in self.gallery[0]]  # self.gallery[0] 是個 deque，裡面存的是 dict
                 
                 if feat_np is None or not np.all(np.isfinite(feat_np)):
-                    self.get_logger().warn("❌ Skipping invalid feat_np (NaN/Inf detected)")
+                    self.get_logger().warn("Skipping invalid feat_np (NaN/Inf detected)")
                     continue
 
                 gallery_feats = [
@@ -239,13 +239,13 @@ class PersonReIDNode(Node):
                     if d['feat'] is not None and np.isfinite(d['feat']).all()
                 ]
                 if not gallery_feats: 
-                    print("❌ Nothing in gallery")
+                    print("Nothing in gallery")
                     break  # 沒東西就跳出
                 gallery_matrix = np.stack(gallery_feats, axis=0) # 再把這些 (C,) 向量堆疊成 (N, C) 的矩陣
                 try:
                     sims = cosine_similarity(feat_np.reshape(1, -1), gallery_matrix)[0]
                 except ValueError as e:
-                    self.get_logger().error(f"❌ cosine_similarity failed: {e}")
+                    self.get_logger().error(f"cosine_similarity failed: {e}")
                     continue
                 # sims = cosine_similarity(feat_np.reshape(1, -1), np.stack(self.gallery[0][0]['feat'], axis=0))[0]
                 best_score = float(sims.max())  # 直接取 deque 內歷史特徵的最高分
@@ -361,7 +361,7 @@ class PersonReIDNode(Node):
                     # color_bar = cv2.applyColorMap(norm, cv2.COLORMAP_JET)
                     color_bar = cv2.applyColorMap(norm, cv2.COLORMAP_SUMMER)
                 else:
-                    print("⚠️ Skipping invalid feature for visualization.")
+                    print("Skipping invalid feature for visualization.")
                     continue
 
                 bar = cv2.resize(color_bar, (bar_width, bar_height))
