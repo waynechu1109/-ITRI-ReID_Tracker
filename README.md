@@ -107,8 +107,3 @@ Simply click on any person in the video frame to start tracking them. The detect
     </td>
   </tr>
 </table>
-
-
-## Related Porjects
-
-## Acknowledgement
